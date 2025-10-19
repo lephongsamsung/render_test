@@ -13,10 +13,10 @@ app.use(cors());
 
 // Mount routes
 app.use("/", supabaseRoutes);
-app.use("/crypto", binanceRoutes);
-app.use("/crypto", sentimentRoutes);
-app.use("/crypto", fundingRoutes);
-app.use("/crypto", summaryRoutes);
+app.use("/", binanceRoutes);
+app.use("/", sentimentRoutes);
+app.use("/", fundingRoutes);
+app.use("/", summaryRoutes);
 
 // Health check
 app.get("/", (req, res) => {
