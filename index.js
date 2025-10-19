@@ -32,11 +32,11 @@ app.get("/proxy", async (req, res) => {
 
 // ✅ Route 2: Lấy toàn bộ danh sách (list all)
 app.get("/proxy/list", async (req, res) => {
-  const { table } = req.query;
+  const { table, limit = 10 } = req.query;  // ✅ default limit = 10
 
   if (!table) return res.status(400).json({ error: "Missing table" });
 
-  const apiUrl = `${SUPABASE_URL}/rest/v1/${table}`;
+  const apiUrl = `${SUPABASE_URL}/rest/v1/${table}?limit=${limit}`; // ✅ thêm limit
 
   try {
     const response = await fetch(apiUrl, {
@@ -52,6 +52,7 @@ app.get("/proxy/list", async (req, res) => {
     res.status(500).json({ error: "Proxy Error", detail: error.message });
   }
 });
+
 
 // ✅ Port Render
 const PORT = process.env.PORT || 10000;
