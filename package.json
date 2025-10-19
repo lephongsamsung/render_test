@@ -1,13 +1,18 @@
 {
-  "name": "supabase-proxy",
+  "name": "crypto-proxy-server",
   "version": "1.0.0",
+  "description": "Proxy server for Crypto Master Agent",
   "type": "module",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "express": "^4.19.2",
-    "node-fetch": "^3.3.2"
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.2",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
