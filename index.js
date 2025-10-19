@@ -1,88 +1,28 @@
 import express from "express";
-import fetch from "node-fetch";
+import cors from "cors";
+
+// Import route modules
+import supabaseRoutes from "./routes/supabase.js";
+import binanceRoutes from "./routes/binance.js";
+import sentimentRoutes from "./routes/sentiment.js";
+import fundingRoutes from "./routes/funding.js";
+import summaryRoutes from "./routes/summary.js";
 
 const app = express();
-const SUPABASE_URL = "https://czdmkwjbfljmfijaulor.supabase.co";
-const SUPABASE_KEY = process.env.SUPABASE_KEY;
+app.use(cors());
 
-// ✅ Route 1: Chi tiết theo ID
-app.get("/proxy", async (req, res) => {
-  const { table, id } = req.query;
-  if (!table || !id)
-    return res.status(400).json({ error: "Missing table or id" });
+// Mount routes
+app.use("/", supabaseRoutes);
+app.use("/crypto", binanceRoutes);
+app.use("/crypto", sentimentRoutes);
+app.use("/crypto", fundingRoutes);
+app.use("/crypto", summaryRoutes);
 
-  const url = `${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`;
-  try {
-    const response = await fetch(url, {
-      headers: {
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`,
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+// Health check
+app.get("/", (req, res) => {
+  res.json({ message: "✅ Crypto Proxy Server is running" });
 });
 
-// ✅ Route 2: Lấy danh sách tất cả (crypto_news)
-app.get("/proxy/list", async (req, res) => {
-  const { table = "crypto_news", limit = 10 } = req.query;
-  const url = `${SUPABASE_URL}/rest/v1/${table}?limit=${limit}`;
-  try {
-    const response = await fetch(url, {
-      headers: {
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`,
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// ✅ Route 3: mv_news_flat
-app.get("/proxy/list_flat", async (req, res) => {
-  const { table = "mv_news_flat", limit = 10 } = req.query;
-  const url = `${SUPABASE_URL}/rest/v1/${table}?limit=${limit}`;
-  try {
-    const response = await fetch(url, {
-      headers: {
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`,
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// ✅ Route 4: mv_news_daily_asset
-app.get("/proxy/list_daily", async (req, res) => {
-  const { table = "mv_news_daily_asset", limit = 10 } = req.query;
-  const url = `${SUPABASE_URL}/rest/v1/${table}?limit=${limit}`;
-  try {
-    const response = await fetch(url, {
-      headers: {
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`,
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
+// Start server
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
