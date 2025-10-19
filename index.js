@@ -26,3 +26,9 @@ app.get("/", (req, res) => {
 // Start server
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+
+app._router.stack.forEach((r) => {
+  if (r.route && r.route.path) {
+    console.log("✅ Route:", r.route.path);
+  }
+});
